@@ -1,5 +1,5 @@
 # Serial-Logger
-Simple script for logging data from a serial port to a file
+Simple script for logging data from a serial port to a file.
 
 ## Overview
 This script reads data from a configured serial port.  
@@ -7,7 +7,7 @@ The data is split into points at a specified data separator.
 These data points are then timestamped and saved to a CSV document.  
 Use the `SerialConfiguration()` class to modify the script's behavior.  
 
-## Example
+## Default config example
 Read from serial port:  
 ```
 DATA1\r\n
