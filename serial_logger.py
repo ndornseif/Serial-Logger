@@ -16,7 +16,7 @@ import serial
 __author__ = "N. Dornseif"
 __copyright__ = "Copyright 2023, N. Dornseif"
 __license__ = "GNU General Public License v3.0"
-__version__ = "1.0.0"
+__version__ = "1.0.2"
 
 
 @dataclass
@@ -131,13 +131,13 @@ def main() -> None:
     serial_port = open_serial_port(serial_config)
     main_logger.info('Saving data to file: %s', serial_config.data_file_path)
     current_data_point = b''
-    retry_count = 1
+    retry_count = 0
     while True:
         try:
             read_byte = serial_port.read()
         except serial.serialutil.SerialException as exc:
             if 'returned no data' in str(exc):
-                if retry_count > 10:
+                if retry_count > 9:
                     main_logger.critical(
                         'Cant access serial port after 10 retries. Exiting.')
                     cleanup_port()
@@ -145,12 +145,14 @@ def main() -> None:
                 else:
                     main_logger.critical(
                         'Cant access serial port! Retrying... (%s/10)',
-                        retry_count)
+                        retry_count + 1)
                     retry_count += 1
                     time.sleep(6)
                     continue
             else:
                 raise
+        else:
+            retry_count = 0
 
         if read_byte not in serial_config.remove_byte_list:
             current_data_point += read_byte
